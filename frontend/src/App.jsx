@@ -5,7 +5,7 @@ import EmailAnalyzer from './pages/EmailAnalyzer';
 import { BarChart3, Home, LogOut } from 'lucide-react';
 import './App.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
+const API_BASE_URL = 'import.meta.env.VITE_API_URL';
 
 function App() {
   const [user, setUser] = useState(null);

@@ -9,7 +9,7 @@ import FeatureFrequencyChart from '../components/FeatureFrequencyChart';
 import WarningsFrequencyChart from '../components/WarningsFrequencyChart';
 import ActivityStreak from '../components/ActivityStreak';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
+const API_BASE_URL = 'import.meta.env.VITE_API_URL';
 
 const Dashboard = ({ user, onNavigate, logout }) => {
   const [analytics, setAnalytics] = useState(null);
