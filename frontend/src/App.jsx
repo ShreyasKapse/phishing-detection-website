@@ -5,7 +5,9 @@ import EmailAnalyzer from './pages/EmailAnalyzer';
 import { BarChart3, Home, LogOut } from 'lucide-react';
 import './App.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -254,7 +256,7 @@ function App() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600">
-                Welcome, {user.email}
+                Welcome, {user?.email || user?.full_name || (typeof user === 'string' ? user : 'User')}
               </span>
               <button
                 onClick={logout}
