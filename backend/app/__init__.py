@@ -27,7 +27,19 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
-    CORS(app)  # Enable CORS for all routes
+    
+    # Configure CORS with explicit settings
+    CORS(app, resources={
+        r"/*": {
+            "origins": [
+                "https://phishing-detection-website-dun.vercel.app",
+                "http://localhost:5173",  # Vite dev server
+                "http://localhost:3000"   # Alternative local dev
+            ],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
     
     # Register routes
     from . import routes
