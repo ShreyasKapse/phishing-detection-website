@@ -1,0 +1,25 @@
+﻿/* App.css - Basic styles for the phishing detector */
+
+.app {
+  min-height: 100vh;
+}
+
+.risk-low {
+  background-color: #d1fae5;
+  border-color: #10b981;
+}
+
+.risk-medium {
+  background-color: #fef3c7;
+  border-color: #f59e0b;
+}
+
+.risk-high {
+  background-color: #fed7d7;
+  border-color: #dc2626;
+}
+
+.risk-critical {
+  background-color: #fecaca;
+  border-color: #b91c1c;
+}
