@@ -36,7 +36,8 @@ export default function Dashboard() {
         const token = await getIdToken();
         if (!token) throw new Error("No token returned");
 
-        const response = await fetch(`http://localhost:5000/api/analyses`, {
+        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+        const response = await fetch(`${API_BASE_URL}/api/analyses`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

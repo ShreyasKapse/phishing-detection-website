@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { AlertTriangle, Shield, CheckCircle, Upload, Link as LinkIcon, FileText, Zap, Clock, ShieldCheck, Fingerprint, FileWarning } from 'lucide-react';
 import { useToast } from '../components/ui/use-toast';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function EmailAnalyzer() {
   const [formData, setFormData] = useState({ subject: '', body: '', from: '', reply_to: '' });
