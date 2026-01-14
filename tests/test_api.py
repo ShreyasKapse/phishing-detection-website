@@ -14,7 +14,7 @@ def test_health():
         print(f"Response: {json.dumps(resp.json(), indent=2)}")
         return resp.status_code == 200
     except Exception as e:
-        print(f"❌ FAILED: {e}")
+        print(f"FAILED: {e}")
         return False
 
 def test_url_analysis():
@@ -42,10 +42,10 @@ def test_url_analysis():
             missing = [f for f in required_fields if f not in result]
             
             if missing:
-                print(f"\n❌ Missing required fields: {missing}")
+                print(f"Missing required fields: {missing}")
                 return False
             
-            print(f"\n✅ Response Format Valid")
+            print(f"\nResponse Format Valid")
             print(f"   Verdict: {result['verdict']}")
             print(f"   Score: {result['score']}")
             print(f"   Risk Level: {result.get('risk_level', 'N/A')}")
@@ -56,7 +56,7 @@ def test_url_analysis():
             return False
             
     except Exception as e:
-        print(f"❌ FAILED: {e}")
+        print(f"FAILED: {e}")
         return False
 
 def test_email_analysis():
@@ -88,10 +88,10 @@ def test_email_analysis():
             missing = [f for f in required_fields if f not in result]
             
             if missing:
-                print(f"\n❌ Missing required fields: {missing}")
+                print(f"Missing required fields: {missing}")
                 return False
             
-            print(f"\n✅ Response Format Valid")
+            print(f"\nResponse Format Valid")
             print(f"   Verdict: {result['verdict']}")
             print(f"   Score: {result['score']}")
             print(f"   Risk Level: {result.get('risk_level', 'N/A')}")
@@ -101,13 +101,13 @@ def test_email_analysis():
             return False
             
     except Exception as e:
-        print(f"❌ FAILED: {e}")
+        print(f"FAILED: {e}")
         return False
 
 def main():
-    print("\n" + "🧪 " + "="*56)
-    print("🧪  PHISHING DETECTION WEBAPP - API TEST SUITE")
-    print("🧪 " + "="*56)
+    print("\n" + "TEST " + "="*56)
+    print("TEST  PHISHING DETECTION WEBAPP - API TEST SUITE")
+    print("TEST " + "="*56)
     
     results = {
         "Health Check": test_health(),
@@ -120,7 +120,7 @@ def main():
     print("="*60)
     
     for test_name, passed in results.items():
-        status = "✅ PASSED" if passed else "❌ FAILED"
+        status = "PASSED" if passed else "FAILED"
         print(f"{test_name:.<40} {status}")
     
     total = len(results)
@@ -129,10 +129,10 @@ def main():
     print(f"\nTotal: {passed}/{total} tests passed")
     
     if passed == total:
-        print("\n🎉 All tests passed! Webapp is working correctly.")
+        print("\nAll tests passed! Webapp is working correctly.")
         return 0
     else:
-        print(f"\n⚠️  {total - passed} test(s) failed. Check the output above.")
+        print(f"\n{total - passed} test(s) failed. Check the output above.")
         return 1
 
 if __name__ == "__main__":

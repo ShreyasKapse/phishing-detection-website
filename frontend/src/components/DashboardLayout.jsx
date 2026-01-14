@@ -12,7 +12,8 @@ import {
     X,
     User,
     Mail,
-    Home
+    Home,
+    Settings
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -38,6 +39,7 @@ export default function DashboardLayout({ children }) {
         { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
         { name: 'URL Analysis', path: '/analyzer', icon: Shield },
         { name: 'Email Analysis', path: '/email', icon: Mail },
+        { name: 'Settings', path: '/settings', icon: Settings },
     ];
 
     const isActive = (path) => location.pathname === path;

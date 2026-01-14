@@ -1,23 +1,65 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 
-export default function DashboardCharts() {
-    const pieData = [
-        { name: 'Safe', value: 400, color: '#22c55e' }, // Green
-        { name: 'Suspicious', value: 300, color: '#eab308' }, // Yellow
-        { name: 'Phishing', value: 300, color: '#ef4444' }, // Red
-    ];
+export default function DashboardCharts({ history = [] }) {
 
-    const barData = [
-        { name: 'Mon', alerts: 4 },
-        { name: 'Tue', alerts: 7 },
-        { name: 'Wed', alerts: 2 },
-        { name: 'Thu', alerts: 9 },
-        { name: 'Fri', alerts: 5 },
-        { name: 'Sat', alerts: 3 },
-        { name: 'Sun', alerts: 1 },
-    ];
+    // Process history for Risk Distribution
+    const pieData = useMemo(() => {
+        if (!history || history.length === 0) return [
+            { name: 'No Data', value: 1, color: '#e5e7eb' }
+        ];
+
+        let safe = 0;
+        let suspicious = 0;
+        let phishing = 0;
+
+        history.forEach(item => {
+            if (item.result === 'Safe') safe++;
+            else if (item.result === 'Suspicious') suspicious++;
+            else phishing++;
+        });
+
+        // Filter out zero values to look cleaner
+        const data = [
+            { name: 'Safe', value: safe, color: '#22c55e' },
+            { name: 'Suspicious', value: suspicious, color: '#eab308' },
+            { name: 'Phishing', value: phishing, color: '#ef4444' },
+        ].filter(d => d.value > 0);
+
+        return data.length > 0 ? data : [{ name: 'No Data', value: 1, color: '#e5e7eb' }];
+    }, [history]);
+
+    // Process history for Activity (Last 7 Days)
+    const barData = useMemo(() => {
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const last7Days = [];
+
+        // Initialize last 7 days buckets
+        for (let i = 6; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            last7Days.push({
+                name: days[d.getDay()],
+                dateStr: d.toDateString(), // for matching
+                count: 0
+            });
+        }
+
+        if (history) {
+            history.forEach(item => {
+                const itemDate = new Date(item.created_at || item.timestamp); // Handle both formats
+                const itemDateStr = itemDate.toDateString();
+
+                const dayBucket = last7Days.find(d => d.dateStr === itemDateStr);
+                if (dayBucket) {
+                    dayBucket.count++;
+                }
+            });
+        }
+
+        return last7Days.map(d => ({ name: d.name, scans: d.count }));
+    }, [history]);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -51,10 +93,10 @@ export default function DashboardCharts() {
                 </CardContent>
             </Card>
 
-            {/* Warning Frequency Bar Chart */}
+            {/* Daily Activity Bar Chart */}
             <Card className="border-gray-100 shadow-sm">
                 <CardHeader>
-                    <CardTitle className="text-lg font-bold">Warning Frequency</CardTitle>
+                    <CardTitle className="text-lg font-bold">Daily Activity (Last 7 Days)</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="h-[300px] w-full">
@@ -62,12 +104,12 @@ export default function DashboardCharts() {
                             <BarChart data={barData}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
                                 <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#6b7280' }} axisLine={false} tickLine={false} />
-                                <YAxis tick={{ fontSize: 12, fill: '#6b7280' }} axisLine={false} tickLine={false} />
+                                <YAxis tick={{ fontSize: 12, fill: '#6b7280' }} axisLine={false} tickLine={false} allowDecimals={false} />
                                 <Tooltip
                                     cursor={{ fill: '#f9fafb' }}
                                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                                 />
-                                <Bar dataKey="alerts" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="scans" fill="#6366f1" radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>

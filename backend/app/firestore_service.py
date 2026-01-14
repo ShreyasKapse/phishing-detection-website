@@ -16,9 +16,10 @@ class FirestoreService:
             self.mock_mode = True
             self.mock_db = {} # Simple in-memory store for session
 
-    def add_history(self, user_id, analysis_data):
+    def add_history(self, user_id, analysis_data, user_email=None):
         """
         Adds an analysis record to users/{uid}/history collection.
+        Also updates the parent users/{uid} document to ensure it exists.
         """
         if self.mock_mode:
             print(f"[MOCK POST] Adding history for {user_id}: {analysis_data}")
@@ -35,8 +36,20 @@ class FirestoreService:
             if 'created_at' not in analysis_data:
                 analysis_data['created_at'] = datetime.utcnow().isoformat()
             
+            # Update parent user document to ensure it exists in the 'users' collection
+            user_ref = self.db.collection('users').document(user_id)
+            user_update = {
+                'last_active': datetime.utcnow().isoformat(),
+                'updated_at': datetime.utcnow().isoformat()
+            }
+            if user_email:
+                user_update['email'] = user_email
+                
+            # Use set with merge=True to create if not exists or update fields
+            user_ref.set(user_update, merge=True)
+
             # Add to subcollection
-            doc_ref = self.db.collection('users').document(user_id).collection('history').document()
+            doc_ref = user_ref.collection('history').document()
             analysis_data['id'] = doc_ref.id
             doc_ref.set(analysis_data)
             return doc_ref.id

@@ -6,7 +6,9 @@ import {
     onAuthStateChanged,
     updateProfile,
     signInWithPopup,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    updatePassword,
+    updateEmail
 } from "firebase/auth";
 import { auth, db, googleProvider } from "../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
@@ -103,6 +105,29 @@ export function AuthProvider({ children }) {
         return sendPasswordResetEmail(auth, email);
     }
 
+    function updateUserPassword(password) {
+        return updatePassword(currentUser, password);
+    }
+
+    async function updateUserProfile(data) {
+        // Update auth profile
+        if (data.displayName || data.photoURL) {
+            await updateProfile(currentUser, {
+                displayName: data.displayName,
+                photoURL: data.photoURL
+            });
+        }
+
+        // Update email if changed (requires re-auth usually, but basic impl here)
+        if (data.email && data.email !== currentUser.email) {
+            await updateEmail(currentUser, data.email);
+        }
+
+        // Update Firestore doc
+        const userRef = doc(db, "users", currentUser.uid);
+        await setDoc(userRef, data, { merge: true });
+    }
+
     function getIdToken() {
         return currentUser ? currentUser.getIdToken() : Promise.resolve(null);
     }
@@ -114,6 +139,8 @@ export function AuthProvider({ children }) {
         loginWithGoogle,
         logout,
         resetPassword,
+        updateUserPassword,
+        updateUserProfile,
         getIdToken
     };
 

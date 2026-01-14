@@ -2,35 +2,39 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Shield, Eye, Heart, Linkedin, Twitter, Github } from 'lucide-react';
+import iramImage from '../images/iram.jpeg';
+import snehaImage from '../images/sneha.jpg';
+import karleImage from '../images/karle.jpg';
+import afanImage from '../images/afan.png';
 
 export default function AboutUs() {
     const team = [
         {
-            name: "David Chen",
+            name: "Iramsaba Sayyed",
             role: "Lead Security Architect",
             bio: "Specializes in threat modeling and cryptographic protocols. Previously led security teams at major fintech firms.",
-            image: "https://api.dicebear.com/7.x/avataaars/svg?seed=David",
+            image: iramImage,
             social: ["linkedin", "twitter"]
         },
         {
-            name: "Sarah Jenkins",
+            name: "Sneha Tupe",
             role: "Senior AI Engineer",
             bio: "Expert in Natural Language Processing and heuristic analysis. Sarah trains our models to detect subtleties.",
-            image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+            image: snehaImage,
             social: ["linkedin", "github"]
         },
         {
-            name: "Marcus Johnson",
+            name: "Sneha Karle",
             role: "Lead Full-Stack Developer",
             bio: "Ensures the PhishGuard platform is robust, scalable, and responsive. Marcus bridges the gap between os...",
-            image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus",
+            image: karleImage,
             social: ["linkedin", "github"]
         },
         {
-            name: "Emily Rodriguez",
+            name: "Afan Dalvi",
             role: "UI/UX Designer",
             bio: "Advocate for user-centric security. Emily designs intuitive interfaces that make advanced protection accessible.",
-            image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",
+            image: afanImage,
             social: ["linkedin", "twitter"]
         }
     ];
@@ -92,10 +96,10 @@ export default function AboutUs() {
                             </div>
                         </div>
                         <div className="md:w-2/3 p-8 md:p-12 lg:p-16 flex flex-col justify-center">
-                            <h3 className="text-2xl font-bold text-gray-900 mb-1">Dr. Alistair Sterling</h3>
-                            <p className="text-indigo-600 font-medium mb-6">Founder & Chief Scientific Advisor</p>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-1">Prof. Rajeshwari Dandage</h3>
+                            <p className="text-indigo-600 font-medium mb-6">Professor & Project Mentor</p>
                             <p className="text-gray-600 leading-relaxed mb-6">
-                                With over 20 years of experience in cybersecurity and behavioral analysis, Dr. Sterling guides PhishGuard AI's mission with unwavering ethical standards. His mentorship ensures that our team not only develops cutting-edge technology but also understands the human impact of every line of code we write.
+                                With over years of experience in cybersecurity and behavioral analysis, Prof. Rajeshwari Dandage guides PhishGuard AI's mission with unwavering ethical standards. Her mentorship ensures that our team not only develops cutting-edge technology but also understands the human impact of every line of code we write.
                             </p>
                             <div className="flex flex-wrap gap-2">
                                 <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full">Ethical AI</span>
@@ -119,7 +123,7 @@ export default function AboutUs() {
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {team.map((member, idx) => (
                             <div key={idx} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all text-center">
-                                <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 border-2 border-indigo-100">
+                                <div className="w-36 h-36 mx-auto rounded-full overflow-hidden mb-4 border-2 border-indigo-100">
                                     <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
                                 </div>
                                 <h3 className="font-bold text-lg text-gray-900">{member.name}</h3>
@@ -143,10 +147,10 @@ export default function AboutUs() {
                 <div className="max-w-4xl mx-auto px-4 text-center">
                     <h2 className="text-3xl font-bold text-gray-900 mb-6">Want to join our mission?</h2>
                     <p className="text-gray-500 mb-8 max-w-xl mx-auto">
-                        We are always looking for talented individuals passionate about cybersecurity and AI. Check out our open roles.
+                        We are always looking for talented individuals passionate about cybersecurity and AI. If you are interested in joining our team.
                     </p>
                     <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 rounded-full">
-                        View Open Positions
+                        Contact Us
                     </Button>
                 </div>
             </section>

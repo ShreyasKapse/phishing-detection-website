@@ -9,13 +9,12 @@ import os
 # Or place serviceAccountKey.json in the backend directory.
 
 # Check for service account key
+FORCE_MOCK_AUTH = os.environ.get('FORCE_MOCK_AUTH', 'false').lower() == 'true'
 key_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'serviceAccountKey.json')
-if os.path.exists(key_path):
+
+if os.path.exists(key_path) and not FORCE_MOCK_AUTH:
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = key_path
-    print(f"✅ Found service account key at: {key_path}")
-    FORCE_MOCK_AUTH = False  # Auto-disable mock mode if key is found
-else:
-    FORCE_MOCK_AUTH = os.environ.get('FORCE_MOCK_AUTH', 'true').lower() == 'true'
+    print(f"Found service account key at: {key_path}")
 
 MOCK_MODE = FORCE_MOCK_AUTH 
 
@@ -25,13 +24,13 @@ if not FORCE_MOCK_AUTH:
             # It will now use the GOOGLE_APPLICATION_CREDENTIALS env var we likely set above
             cred = credentials.ApplicationDefault()
             firebase_admin.initialize_app(cred)
-        print("✅ Firebase Admin initialized successfully (Real Auth Mode)")
+        print("Firebase Admin initialized successfully (Real Auth Mode)")
     except Exception as e:
-        print(f"⚠️ Firebase Admin init failed ({e}). Running in MOCK MODE.")
+        print(f"Firebase Admin init failed ({e}). Running in MOCK MODE.")
         print("   All authentication will use mock user: mock_user_123")
         MOCK_MODE = True
 else:
-    print("⚠️ FORCE_MOCK_AUTH is enabled. Running in MOCK MODE.")
+    print("FORCE_MOCK_AUTH is enabled. Running in MOCK MODE.")
     print("   All authentication will use mock user: mock_user_123")
     print("   Set FORCE_MOCK_AUTH=false (or provide serviceAccountKey.json) to use real Firebase verification")
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -17,15 +17,21 @@ export default function Login() {
     const [resetOpen, setResetOpen] = useState(false);
     const navigate = useNavigate();
     const { toast } = useToast();
+    const location = useLocation();
+    const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
         if (currentUser) {
             navigate('/dashboard');
         }
-    }, [currentUser, navigate]);
+        if (location.state?.successMessage) {
+            setSuccessMessage(location.state.successMessage);
+        }
+    }, [currentUser, navigate, location]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSuccessMessage(''); // Clear success when trying to login
         try {
             setError('');
             setLoading(true);
@@ -39,11 +45,11 @@ export default function Login() {
         } catch (err) {
             let message = "Failed to log in.";
             if (err.code === 'auth/invalid-credential') {
-                message = "Invalid email or password.";
+                message = "Invalid credentials";
             } else if (err.code === 'auth/user-not-found') {
-                message = "No account found with this email.";
+                message = "User not found please create account";
             } else if (err.code === 'auth/wrong-password') {
-                message = "Incorrect password.";
+                message = "Password is wrong";
             } else if (err.code === 'auth/too-many-requests') {
                 message = "Too many failed attempts. Please try again later.";
             }
@@ -129,6 +135,26 @@ export default function Login() {
                     </div>
 
                     <div className="mt-8">
+                        {/* Success Message */}
+                        {successMessage && (
+                            <div className="mb-6 p-4 rounded-md bg-green-50 border border-green-200 text-green-700 text-sm flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                                <span>{successMessage}</span>
+                            </div>
+                        )}
+
+                        {/* Error Message */}
+                        {error && (
+                            <div className="mb-6 p-4 rounded-md bg-red-50 border border-red-200 text-red-600 text-sm flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                </svg>
+                                <span>{error}</span>
+                            </div>
+                        )}
+
                         {/* Google Login Button */}
                         <div className="mb-6">
                             <Button
