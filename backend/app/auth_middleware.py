@@ -11,20 +11,35 @@ import os
 # Check for service account key
 FORCE_MOCK_AUTH = os.environ.get('FORCE_MOCK_AUTH', 'false').lower() == 'true'
 key_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'serviceAccountKey.json')
-
-if os.path.exists(key_path) and not FORCE_MOCK_AUTH:
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = key_path
-    print(f"Found service account key at: {key_path}")
-
-MOCK_MODE = FORCE_MOCK_AUTH 
+firebase_creds_str = os.environ.get('FIREBASE_SERVICE_ACCOUNT_JSON')
 
 if not FORCE_MOCK_AUTH:
     try:
-        if not firebase_admin._apps:
-            # It will now use the GOOGLE_APPLICATION_CREDENTIALS env var we likely set above
-            cred = credentials.ApplicationDefault()
-            firebase_admin.initialize_app(cred)
-        print("Firebase Admin initialized successfully (Real Auth Mode)")
+        cred = None
+        if firebase_creds_str:
+            print("Found FIREBASE_SERVICE_ACCOUNT_JSON environment variable.")
+            import json
+            cred_dict = json.loads(firebase_creds_str)
+            cred = credentials.Certificate(cred_dict)
+        
+        elif os.path.exists(key_path):
+            print(f"Found service account key at: {key_path}")
+            cred = credentials.Certificate(key_path)
+            
+        if cred:
+            if not firebase_admin._apps:
+                firebase_admin.initialize_app(cred)
+            print("Firebase Admin initialized successfully (Real Auth Mode)")
+        else:
+             # Fallback to Google Cloud Default (for GCP hosting) or Error
+             if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
+                 if not firebase_admin._apps:
+                    firebase_admin.initialize_app()
+                 print("Using GOOGLE_APPLICATION_CREDENTIALS for Firebase.")
+             else:
+                 print("WARNING: No Firebase credentials found (File or Env Var).")
+                 raise Exception("No credentials found")
+
     except Exception as e:
         print(f"Firebase Admin init failed ({e}). Running in MOCK MODE.")
         print("   All authentication will use mock user: mock_user_123")
