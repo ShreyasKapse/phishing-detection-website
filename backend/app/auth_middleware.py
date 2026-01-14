@@ -13,6 +13,8 @@ FORCE_MOCK_AUTH = os.environ.get('FORCE_MOCK_AUTH', 'false').lower() == 'true'
 key_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'serviceAccountKey.json')
 firebase_creds_str = os.environ.get('FIREBASE_SERVICE_ACCOUNT_JSON')
 
+MOCK_MODE = FORCE_MOCK_AUTH 
+
 if not FORCE_MOCK_AUTH:
     try:
         cred = None
