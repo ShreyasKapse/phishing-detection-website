@@ -5,14 +5,17 @@ import { Input } from '../components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import {
   Shield, Activity, ArrowRight, Eye, Chrome, Slack, Gem,
-  Link, Mail, Flag, Lightbulb, Lock, AlertTriangle, RefreshCw
+  Link, Mail, Flag, Lightbulb, Lock, AlertTriangle, RefreshCw, Download
 } from 'lucide-react';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { useToast } from '../components/ui/use-toast';
 import ErrorBoundary from '../components/ErrorBoundary';
 import StatsCards from '../components/dashboard/StatsCards';
 import DashboardCharts from '../components/dashboard/DashboardCharts';
 import RiskyItems from '../components/dashboard/RiskyItems';
 import ScanDetailModal from '../components/dashboard/ScanDetailModal';
+import ThreatMap from '../components/dashboard/ThreatMap';
 
 export default function Dashboard() {
   const { currentUser, getIdToken } = useAuth();
@@ -37,7 +40,7 @@ export default function Dashboard() {
         if (!token) throw new Error("No token returned");
 
         const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-        const response = await fetch(`${API_BASE_URL}/api/analyses`, {
+        const response = await fetch(`${API_BASE_URL}/api/analyses?limit=100`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -87,6 +90,39 @@ export default function Dashboard() {
   const closeScanDetail = () => {
     setIsModalOpen(false);
     setSelectedScan(null);
+  };
+
+  const downloadReport = (scan) => {
+    if (!scan) return;
+    const doc = new jsPDF();
+
+    // Header
+    const isPhishing = scan.result === 'Phishing';
+    doc.setFillColor(isPhishing ? 220 : 50, isPhishing ? 50 : 180, 50); // Red or Greenish
+    doc.rect(0, 0, 210, 20, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.text("PhishGuard Security Report", 10, 14);
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(12);
+
+    doc.text(`Target URL: ${scan.url}`, 10, 30);
+    doc.text(`Scan Date: ${scan.timestamp ? new Date(scan.timestamp).toLocaleString() : 'N/A'}`, 10, 38);
+    doc.text(`Verdict: ${scan.result}`, 10, 46);
+
+    // Add features table if available
+    if (scan.features) {
+      doc.text("Features Detected:", 10, 75);
+      const features = Object.entries(scan.features).map(([k, v]) => [k, typeof v === 'boolean' ? (v ? 'Yes' : 'No') : v]);
+      autoTable(doc, {
+        startY: 80,
+        head: [['Feature', 'Value']],
+        body: features,
+      });
+    }
+
+    doc.save(`phishguard-report-${scan.id || 'scan'}.pdf`);
   };
 
   // Derived Stats
@@ -148,8 +184,11 @@ export default function Dashboard() {
         {/* Key Metrics Cards */}
         <StatsCards totalScans={totalScans} threatsBlocked={threatsBlocked} loading={loading} />
 
+        {/* Global Threat Map */}
+        <ThreatMap />
+
         {/* Charts Section */}
-        <DashboardCharts />
+        <DashboardCharts history={history} />
 
         {/* Risky Items & Detailed Lists */}
         <RiskyItems />
@@ -200,6 +239,15 @@ export default function Dashboard() {
                           {item.timestamp ? new Date(item.timestamp).toLocaleDateString() : 'Just now'}
                         </td>
                         <td className="px-6 py-4 text-right">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-gray-500 hover:text-indigo-600 hover:bg-indigo-50"
+                            onClick={(e) => { e.stopPropagation(); downloadReport(item); }}
+                            title="Download PDF Report"
+                          >
+                            <Download className="w-4 h-4" />
+                          </Button>
                           <Button
                             variant="ghost"
                             size="icon"

@@ -72,7 +72,7 @@ def analyze_url():
         }
         
         # Save to Firestore
-        doc_id = firestore_service.add_history(g.user_id, analysis_data)
+        doc_id = firestore_service.add_history(g.user_id, analysis_data, user_email=g.user_email)
         with open('debug_log.txt', 'a') as f:
             f.write(f"ANALYZE_URL: Saved Doc ID {doc_id}\n")
         print(f"DEBUG: Saved to Firestore with ID: {doc_id}")
@@ -153,7 +153,7 @@ def analyze_email():
             'created_at': datetime.utcnow().isoformat()
         }
         
-        doc_id = firestore_service.add_history(g.user_id, analysis_data)
+        doc_id = firestore_service.add_history(g.user_id, analysis_data, user_email=g.user_email)
 
         # Return in requested format
         return jsonify({
@@ -169,6 +169,67 @@ def analyze_email():
     except Exception as e:
         print(f"ERROR in analyze_email: {e}")
         traceback.print_exc()
+        return jsonify({'error': str(e)}), 400
+
+@bp.route('/api/analyze/url/batch', methods=['POST'])
+@require_firebase_token
+def analyze_url_batch():
+    try:
+        data = request.get_json()
+        urls = data.get('urls', [])
+        
+        if not urls or not isinstance(urls, list):
+            return jsonify({'error': 'List of URLs is required'}), 400
+            
+        if len(urls) > 50:
+            return jsonify({'error': 'Batch size limit exceeded (max 50)'}), 400
+            
+        results = []
+        for url in urls:
+            try:
+                # Reuse existing logic (simplified)
+                analysis_result = url_analyzer.analyze(url)
+                prediction = ml_predictor.predict_url(analysis_result['features'])
+                
+                # Saving to history:
+                analysis_data = {
+                    'user_id': g.user_id,
+                    'analysis_type': 'url',
+                    'content': url,
+                    'is_phishing': bool(prediction['is_phishing']),
+                    'confidence': float(prediction['confidence']),
+                    'risk_level': prediction['risk_level'],
+                    'features': analysis_result['features'],
+                    'warnings': analysis_result['warnings'],
+                    'model_used': prediction['model_used'],
+                    'created_at': datetime.utcnow().isoformat()
+                }
+                doc_id = firestore_service.add_history(g.user_id, analysis_data, user_email=g.user_email)
+                
+                results.append({
+                    'url': url,
+                    'status': 'success',
+                    'verdict': 'Phishing' if prediction['is_phishing'] else 'Safe',
+                    'score': prediction['confidence'],
+                    'risk_level': prediction['risk_level'],
+                    'id': doc_id
+                })
+            except Exception as e:
+                results.append({
+                    'url': url,
+                    'status': 'error',
+                    'error': str(e)
+                })
+                
+        return jsonify({
+            'success': True,
+            'results': results,
+            'total': len(urls),
+            'processed': len(results)
+        })
+        
+    except Exception as e:
+        print(f"ERROR in analyze_url_batch: {e}")
         return jsonify({'error': str(e)}), 400
 
 @bp.route('/api/analyses', methods=['GET'])

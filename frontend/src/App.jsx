@@ -11,6 +11,13 @@ import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';
 import Layout from './components/Layout';
 import DashboardLayout from './components/DashboardLayout';
+import Extension from './pages/Extension';
+import ApiDocs from './pages/ApiDocs';
+import Pricing from './pages/Pricing';
+import Contact from './pages/Contact';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Settings from './pages/Settings';
 
 function App() {
   return (
@@ -27,6 +34,42 @@ function App() {
           <Route path="/about" element={
             <Layout>
               <AboutUs />
+            </Layout>
+          } />
+
+          <Route path="/extension" element={
+            <Layout>
+              <Extension />
+            </Layout>
+          } />
+
+          <Route path="/api" element={
+            <Layout>
+              <ApiDocs />
+            </Layout>
+          } />
+
+          <Route path="/pricing" element={
+            <Layout>
+              <Pricing />
+            </Layout>
+          } />
+
+          <Route path="/contact" element={
+            <Layout>
+              <Contact />
+            </Layout>
+          } />
+
+          <Route path="/privacy" element={
+            <Layout>
+              <Privacy />
+            </Layout>
+          } />
+
+          <Route path="/terms" element={
+            <Layout>
+              <Terms />
             </Layout>
           } />
 
@@ -55,6 +98,14 @@ function App() {
             <PrivateRoute>
               <DashboardLayout>
                 <EmailAnalyzer />
+              </DashboardLayout>
+            </PrivateRoute>
+          } />
+
+          <Route path="/settings" element={
+            <PrivateRoute>
+              <DashboardLayout>
+                <Settings />
               </DashboardLayout>
             </PrivateRoute>
           } />
