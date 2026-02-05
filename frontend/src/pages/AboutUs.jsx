@@ -10,31 +10,31 @@ import afanImage from '../images/afan.png';
 export default function AboutUs() {
     const team = [
         {
-            name: "Iramsaba Sayyed",
+            name: "XYZ",
             role: "Lead Security Architect",
             bio: "Specializes in threat modeling and cryptographic protocols. Previously led security teams at major fintech firms.",
-            image: iramImage,
+            image: ,
             social: ["linkedin", "twitter"]
         },
         {
-            name: "Sneha Tupe",
-            role: "Senior AI Engineer",
-            bio: "Expert in Natural Language Processing and heuristic analysis. Sarah trains our models to detect subtleties.",
-            image: snehaImage,
-            social: ["linkedin", "github"]
+            name: "XYZ",
+            role: "Lead Security Architect",
+            bio: "Specializes in threat modeling and cryptographic protocols. Previously led security teams at major fintech firms.",
+            image: ,
+            social: ["linkedin", "twitter"]
         },
         {
-            name: "Sneha Karle",
-            role: "Lead Full-Stack Developer",
-            bio: "Ensures the PhishGuard platform is robust, scalable, and responsive. Marcus bridges the gap between os...",
-            image: karleImage,
-            social: ["linkedin", "github"]
+            name: "XYZ",
+            role: "Lead Security Architect",
+            bio: "Specializes in threat modeling and cryptographic protocols. Previously led security teams at major fintech firms.",
+            image: ,
+            social: ["linkedin", "twitter"]
         },
         {
-            name: "Afan Dalvi",
-            role: "UI/UX Designer",
-            bio: "Advocate for user-centric security. Emily designs intuitive interfaces that make advanced protection accessible.",
-            image: afanImage,
+            name: "XYZ",
+            role: "Lead Security Architect",
+            bio: "Specializes in threat modeling and cryptographic protocols. Previously led security teams at major fintech firms.",
+            image: ,
             social: ["linkedin", "twitter"]
         }
     ];
@@ -96,7 +96,7 @@ export default function AboutUs() {
                             </div>
                         </div>
                         <div className="md:w-2/3 p-8 md:p-12 lg:p-16 flex flex-col justify-center">
-                            <h3 className="text-2xl font-bold text-gray-900 mb-1">Prof. Rajeshwari Dandage</h3>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-1">Prof. xyz</h3>
                             <p className="text-indigo-600 font-medium mb-6">Professor & Project Mentor</p>
                             <p className="text-gray-600 leading-relaxed mb-6">
                                 With over years of experience in cybersecurity and behavioral analysis, Prof. Rajeshwari Dandage guides PhishGuard AI's mission with unwavering ethical standards. Her mentorship ensures that our team not only develops cutting-edge technology but also understands the human impact of every line of code we write.
