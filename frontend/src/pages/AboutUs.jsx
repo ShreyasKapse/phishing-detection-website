@@ -13,28 +13,24 @@ export default function AboutUs() {
             name: "XYZ",
             role: "Lead Security Architect",
             bio: "Specializes in threat modeling and cryptographic protocols. Previously led security teams at major fintech firms.",
-            image: ,
             social: ["linkedin", "twitter"]
         },
         {
             name: "XYZ",
             role: "Lead Security Architect",
             bio: "Specializes in threat modeling and cryptographic protocols. Previously led security teams at major fintech firms.",
-            image: ,
             social: ["linkedin", "twitter"]
         },
         {
             name: "XYZ",
             role: "Lead Security Architect",
             bio: "Specializes in threat modeling and cryptographic protocols. Previously led security teams at major fintech firms.",
-            image: ,
             social: ["linkedin", "twitter"]
         },
         {
             name: "XYZ",
             role: "Lead Security Architect",
             bio: "Specializes in threat modeling and cryptographic protocols. Previously led security teams at major fintech firms.",
-            image: ,
             social: ["linkedin", "twitter"]
         }
     ];
